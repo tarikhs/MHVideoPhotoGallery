@@ -769,7 +769,7 @@
         UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handleDoubleTap:)];
         doubleTap.numberOfTapsRequired =2;
         
-        UITapGestureRecognizer *imageTap =[UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handelImageTap:)];
+        UITapGestureRecognizer *imageTap =[UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handelImageTap:withEvent:)];
         imageTap.numberOfTapsRequired =1;
         
         [self.imageView addGestureRecognizer:doubleTap];
@@ -1059,7 +1059,7 @@
     [self.view bringSubviewToFront:self.moviePlayer.view];
     
     self.moviewPlayerButtonBehinde = [UIButton.alloc initWithFrame:self.view.bounds];
-    [self.moviewPlayerButtonBehinde addTarget:self action:@selector(handelImageTap:) forControlEvents:UIControlEventTouchUpInside];
+    [self.moviewPlayerButtonBehinde addTarget:self action:@selector(handelImageTap:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     self.moviewPlayerButtonBehinde.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
     [self.view bringSubviewToFront:self.scrollView];
@@ -1360,11 +1360,13 @@
     MHStatusBar().alpha =alpha;
 }
 
--(void)handelImageTap:(UIGestureRecognizer *)gestureRecognizer{
+-(void)handelImageTap: (UIControl *) sender withEvent:event{
     if (!self.viewController.isHiddingToolBarAndNavigationBar) {
-        CGPoint tappedLocation = [gestureRecognizer locationInView:self.view];
+        
+        UITouch *touch = [[event allTouches] anyObject];
+        CGPoint tappedLocation = [touch locationInView:self.view];
         if (CGRectContainsPoint(self.moviePlayerToolBarTop.frame, tappedLocation)) {
-             return;
+            return;
         }
         
         [UIView animateWithDuration:0.3 animations:^{
