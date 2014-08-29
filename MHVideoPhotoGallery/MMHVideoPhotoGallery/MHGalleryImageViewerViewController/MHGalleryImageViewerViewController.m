@@ -769,7 +769,7 @@
         UITapGestureRecognizer *doubleTap = [UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handleDoubleTap:)];
         doubleTap.numberOfTapsRequired =2;
         
-        UITapGestureRecognizer *imageTap =[UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handelImageTap:withEvent:)];
+        UITapGestureRecognizer *imageTap =[UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handelImageTap:)];
         imageTap.numberOfTapsRequired =1;
         
         [self.imageView addGestureRecognizer:doubleTap];
@@ -1059,7 +1059,9 @@
     [self.view bringSubviewToFront:self.moviePlayer.view];
     
     self.moviewPlayerButtonBehinde = [UIButton.alloc initWithFrame:self.view.bounds];
-    [self.moviewPlayerButtonBehinde addTarget:self action:@selector(handelImageTap:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *imageTap =[UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handelImageTap:)];
+    imageTap.numberOfTapsRequired =1;
+    [self.moviewPlayerButtonBehinde addGestureRecognizer:imageTap];
     self.moviewPlayerButtonBehinde.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
     [self.view bringSubviewToFront:self.scrollView];
@@ -1360,13 +1362,13 @@
     MHStatusBar().alpha =alpha;
 }
 
--(void)handelImageTap: (UIControl *) sender withEvent:event{
+-(void)handelImageTap:(UIGestureRecognizer *)gestureRecognizer{
     if (!self.viewController.isHiddingToolBarAndNavigationBar) {
-        
-        UITouch *touch = [[event allTouches] anyObject];
-        CGPoint tappedLocation = [touch locationInView:self.view];
-        if (CGRectContainsPoint(self.moviePlayerToolBarTop.frame, tappedLocation)) {
-            return;
+        if ([gestureRecognizer isKindOfClass:[UIGestureRecognizer class]]) {
+            CGPoint tappedLocation = [gestureRecognizer locationInView:self.view];
+            if (CGRectContainsPoint(self.moviePlayerToolBarTop.frame, tappedLocation)) {
+                return;
+            }
         }
         
         [UIView animateWithDuration:0.3 animations:^{
